@@ -1,7 +1,11 @@
 /* ======================= script.js ======================= */
 'use strict';
 
-/* ---------------- Data layer (localStorage) ---------------- */
+/* ---------------- Data layer (localStorage) ----------------
+   Project shape:
+   { id, name, location, year, description, cover,
+     images: [ { label: 'Living Room', urls: ['…', '…', '…'] }, … ] }
+   Old single-photo rooms ({ label, url }) are migrated automatically on read. */
 const STORE_KEY = 'eman_projects_v1';
 const FALLBACK_IMG = 'https://picsum.photos/seed/eman-fallback/1000/750.jpg';
 
@@ -14,10 +18,19 @@ const SAMPLES = [
     description: 'Perched above the Nile in Zamalek, this penthouse is a study in calm. Travertine floors, warm oak joinery and deep emerald upholstery soften the heavy architecture, while brushed brass traces the skyline through every window. The plan is edited to a single gesture per room — light, water, or wood.',
     cover: 'https://picsum.photos/seed/eman-zam-cover/1000/1250.jpg',
     images: [
-      { label: 'Living Room',    url: 'https://picsum.photos/seed/eman-zam-living/1400/900.jpg' },
-      { label: 'Kitchen',        url: 'https://picsum.photos/seed/eman-zam-kitchen/1400/900.jpg' },
-      { label: 'Master Bedroom', url: 'https://picsum.photos/seed/eman-zam-bedroom/1400/900.jpg' },
-      { label: 'Bathroom',       url: 'https://picsum.photos/seed/eman-zam-bath/1400/900.jpg' }
+      { label: 'Living Room',    urls: [
+        'https://picsum.photos/seed/eman-zam-living-1/1400/900.jpg',
+        'https://picsum.photos/seed/eman-zam-living-2/1400/900.jpg',
+        'https://picsum.photos/seed/eman-zam-living-3/1400/900.jpg' ] },
+      { label: 'Kitchen',        urls: [
+        'https://picsum.photos/seed/eman-zam-kitchen-1/1400/900.jpg',
+        'https://picsum.photos/seed/eman-zam-kitchen-2/1400/900.jpg' ] },
+      { label: 'Master Bedroom', urls: [
+        'https://picsum.photos/seed/eman-zam-bedroom-1/1400/900.jpg',
+        'https://picsum.photos/seed/eman-zam-bedroom-2/1400/900.jpg' ] },
+      { label: 'Bathroom',       urls: [
+        'https://picsum.photos/seed/eman-zam-bath-1/1400/900.jpg',
+        'https://picsum.photos/seed/eman-zam-bath-2/1400/900.jpg' ] }
     ]
   },
   {
@@ -28,11 +41,22 @@ const SAMPLES = [
     description: 'A family villa arranged around a double-height atrium in New Cairo. We contrasted quiet limestone volumes with rich walnut cabinetry and layered, low lighting, giving each of the three floors its own tempo — social downstairs, serene upstairs. Custom joinery hides the machinery of daily life from view.',
     cover: 'https://picsum.photos/seed/eman-villa-cover/1000/1250.jpg',
     images: [
-      { label: 'Living Room',    url: 'https://picsum.photos/seed/eman-villa-living/1400/900.jpg' },
-      { label: 'Dining Room',    url: 'https://picsum.photos/seed/eman-villa-dining/1400/900.jpg' },
-      { label: 'Kitchen',        url: 'https://picsum.photos/seed/eman-villa-kitchen/1400/900.jpg' },
-      { label: 'Master Bedroom', url: 'https://picsum.photos/seed/eman-villa-bedroom/1400/900.jpg' },
-      { label: 'Bathroom',       url: 'https://picsum.photos/seed/eman-villa-bath/1400/900.jpg' }
+      { label: 'Living Room',    urls: [
+        'https://picsum.photos/seed/eman-villa-living-1/1400/900.jpg',
+        'https://picsum.photos/seed/eman-villa-living-2/1400/900.jpg',
+        'https://picsum.photos/seed/eman-villa-living-3/1400/900.jpg' ] },
+      { label: 'Dining Room',    urls: [
+        'https://picsum.photos/seed/eman-villa-dining-1/1400/900.jpg',
+        'https://picsum.photos/seed/eman-villa-dining-2/1400/900.jpg' ] },
+      { label: 'Kitchen',        urls: [
+        'https://picsum.photos/seed/eman-villa-kitchen-1/1400/900.jpg',
+        'https://picsum.photos/seed/eman-villa-kitchen-2/1400/900.jpg' ] },
+      { label: 'Master Bedroom', urls: [
+        'https://picsum.photos/seed/eman-villa-bedroom-1/1400/900.jpg',
+        'https://picsum.photos/seed/eman-villa-bedroom-2/1400/900.jpg' ] },
+      { label: 'Bathroom',       urls: [
+        'https://picsum.photos/seed/eman-villa-bath-1/1400/900.jpg',
+        'https://picsum.photos/seed/eman-villa-bath-2/1400/900.jpg' ] }
     ]
   },
   {
@@ -43,10 +67,18 @@ const SAMPLES = [
     description: 'A summer house on the North Coast built for barefoot living. Whitewashed lime walls, bleached oak and raw linen keep the palette salt-air light, while deep shaded loggias blur the line between the living room and the sea. Everything is washable, weathered and deliberately unhurried.',
     cover: 'https://picsum.photos/seed/eman-sahel-cover/1000/1250.jpg',
     images: [
-      { label: 'Living Room',   url: 'https://picsum.photos/seed/eman-sahel-living/1400/900.jpg' },
-      { label: 'Kitchen',       url: 'https://picsum.photos/seed/eman-sahel-kitchen/1400/900.jpg' },
-      { label: 'Guest Bedroom', url: 'https://picsum.photos/seed/eman-sahel-bedroom/1400/900.jpg' },
-      { label: 'Bathroom',      url: 'https://picsum.photos/seed/eman-sahel-bath/1400/900.jpg' }
+      { label: 'Living Room',   urls: [
+        'https://picsum.photos/seed/eman-sahel-living-1/1400/900.jpg',
+        'https://picsum.photos/seed/eman-sahel-living-2/1400/900.jpg' ] },
+      { label: 'Kitchen',       urls: [
+        'https://picsum.photos/seed/eman-sahel-kitchen-1/1400/900.jpg',
+        'https://picsum.photos/seed/eman-sahel-kitchen-2/1400/900.jpg' ] },
+      { label: 'Guest Bedroom', urls: [
+        'https://picsum.photos/seed/eman-sahel-bedroom-1/1400/900.jpg',
+        'https://picsum.photos/seed/eman-sahel-bedroom-2/1400/900.jpg' ] },
+      { label: 'Bathroom',      urls: [
+        'https://picsum.photos/seed/eman-sahel-bath-1/1400/900.jpg',
+        'https://picsum.photos/seed/eman-sahel-bath-2/1400/900.jpg' ] }
     ]
   },
   {
@@ -57,10 +89,19 @@ const SAMPLES = [
     description: 'A golf-front apartment reworked for a collector couple. Gallery walls and museum lighting meet deep olive velvets and smoked oak, so the art breathes without the rooms going cold. The study was carved from an underused guest room and wrapped entirely in book-matched veneer.',
     cover: 'https://picsum.photos/seed/eman-kata-cover/1000/1250.jpg',
     images: [
-      { label: 'Living Room',    url: 'https://picsum.photos/seed/eman-kata-living/1400/900.jpg' },
-      { label: 'Study',          url: 'https://picsum.photos/seed/eman-kata-study/1400/900.jpg' },
-      { label: 'Kitchen',        url: 'https://picsum.photos/seed/eman-kata-kitchen/1400/900.jpg' },
-      { label: 'Master Bedroom', url: 'https://picsum.photos/seed/eman-kata-bedroom/1400/900.jpg' }
+      { label: 'Living Room',    urls: [
+        'https://picsum.photos/seed/eman-kata-living-1/1400/900.jpg',
+        'https://picsum.photos/seed/eman-kata-living-2/1400/900.jpg',
+        'https://picsum.photos/seed/eman-kata-living-3/1400/900.jpg' ] },
+      { label: 'Study',          urls: [
+        'https://picsum.photos/seed/eman-kata-study-1/1400/900.jpg',
+        'https://picsum.photos/seed/eman-kata-study-2/1400/900.jpg' ] },
+      { label: 'Kitchen',        urls: [
+        'https://picsum.photos/seed/eman-kata-kitchen-1/1400/900.jpg',
+        'https://picsum.photos/seed/eman-kata-kitchen-2/1400/900.jpg' ] },
+      { label: 'Master Bedroom', urls: [
+        'https://picsum.photos/seed/eman-kata-bedroom-1/1400/900.jpg',
+        'https://picsum.photos/seed/eman-kata-bedroom-2/1400/900.jpg' ] }
     ]
   },
   {
@@ -71,10 +112,18 @@ const SAMPLES = [
     description: 'A 1930s flat in Garden City restored rather than reinvented. Original floors were lifted, relayed and framed with new brass inlays; high ceilings gained slim plaster cornices and quiet emerald accents. It is a conversation between the building\u2019s history and a very present way of living.',
     cover: 'https://picsum.photos/seed/eman-garden-cover/1000/1250.jpg',
     images: [
-      { label: 'Living Room', url: 'https://picsum.photos/seed/eman-garden-living/1400/900.jpg' },
-      { label: 'Kitchen',     url: 'https://picsum.photos/seed/eman-garden-kitchen/1400/900.jpg' },
-      { label: 'Bedroom',     url: 'https://picsum.photos/seed/eman-garden-bedroom/1400/900.jpg' },
-      { label: 'Bathroom',    url: 'https://picsum.photos/seed/eman-garden-bath/1400/900.jpg' }
+      { label: 'Living Room', urls: [
+        'https://picsum.photos/seed/eman-garden-living-1/1400/900.jpg',
+        'https://picsum.photos/seed/eman-garden-living-2/1400/900.jpg' ] },
+      { label: 'Kitchen',     urls: [
+        'https://picsum.photos/seed/eman-garden-kitchen-1/1400/900.jpg',
+        'https://picsum.photos/seed/eman-garden-kitchen-2/1400/900.jpg' ] },
+      { label: 'Bedroom',     urls: [
+        'https://picsum.photos/seed/eman-garden-bedroom-1/1400/900.jpg',
+        'https://picsum.photos/seed/eman-garden-bedroom-2/1400/900.jpg' ] },
+      { label: 'Bathroom',    urls: [
+        'https://picsum.photos/seed/eman-garden-bath-1/1400/900.jpg',
+        'https://picsum.photos/seed/eman-garden-bath-2/1400/900.jpg' ] }
     ]
   }
 ];
@@ -83,7 +132,19 @@ const Store = {
   all() {
     try {
       const v = JSON.parse(localStorage.getItem(STORE_KEY));
-      return Array.isArray(v) ? v : [];
+      if (!Array.isArray(v)) return [];
+      /* Normalize: migrate old { label, url } rooms to { label, urls: [...] } */
+      return v.map(p => ({
+        ...p,
+        images: (Array.isArray(p.images) ? p.images : [])
+          .map(im => {
+            let urls = Array.isArray(im.urls) ? im.urls.slice() : [];
+            if (im.url) urls.unshift(im.url);
+            urls = urls.map(u => String(u || '').trim()).filter(Boolean);
+            return { label: im.label || '', urls };
+          })
+          .filter(im => im.urls.length)
+      }));
     } catch (e) { return []; }
   },
   save(list) { localStorage.setItem(STORE_KEY, JSON.stringify(list)); },
@@ -96,6 +157,7 @@ const $  = (s, c = document) => c.querySelector(s);
 const $$ = (s, c = document) => [...c.querySelectorAll(s)];
 const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
 const pad = n => String(n).padStart(2, '0');
+const photoCount = p => (p.images || []).reduce((n, r) => n + r.urls.length, 0);
 
 let toastTimer;
 function toast(msg) {
@@ -109,7 +171,6 @@ function toast(msg) {
 
 function imgErr(img) { img.onerror = null; img.src = FALLBACK_IMG; }
 
-/* Scroll-lock shared by menu / detail / lightbox */
 function lockUpdate() {
   const any = $('#detail')?.classList.contains('open') ||
               $('#lightbox')?.classList.contains('open') ||
@@ -117,7 +178,6 @@ function lockUpdate() {
   document.body.classList.toggle('locked', any);
 }
 
-/* Reveal-on-scroll */
 let io;
 function initReveal() {
   io = new IntersectionObserver(entries => {
@@ -130,7 +190,6 @@ function observeReveals(root = document) {
   $$('[data-reveal]', root).forEach(el => io.observe(el));
 }
 
-/* Confirm modal (admin) */
 let confirmCb = null;
 function openConfirm(title, msg, btnText, cb) {
   const m = $('#modal');
@@ -150,7 +209,6 @@ function initModal() {
   m.addEventListener('click', e => { if (e.target === m) closeConfirm(); });
 }
 
-/* ---------------- Bootstrap ---------------- */
 document.addEventListener('DOMContentLoaded', () => {
   Store.seed();
   initModal();
@@ -165,13 +223,11 @@ function initPublic() {
   initReveal();
   let projects = Store.all();
 
-  /* Header state */
   const header = $('#header');
   const onScroll = () => header.classList.toggle('scrolled', scrollY > 40);
   onScroll();
   addEventListener('scroll', onScroll, { passive: true });
 
-  /* Fullscreen menu */
   const menu = $('#menu');
   $('#burger').addEventListener('click', () => { menu.classList.add('open'); menu.setAttribute('aria-hidden', 'false'); lockUpdate(); });
   function closeMenu() { menu.classList.remove('open'); menu.setAttribute('aria-hidden', 'true'); lockUpdate(); }
@@ -181,7 +237,7 @@ function initPublic() {
   /* Projects grid */
   const grid = $('#worksGrid');
   function cardHTML(p, i) {
-    const cover = p.cover || p.images?.[0]?.url || FALLBACK_IMG;
+    const cover = p.cover || p.images?.[0]?.urls?.[0] || FALLBACK_IMG;
     return `
       <article class="card" data-reveal data-id="${p.id}" tabindex="0" role="button" aria-label="View project: ${esc(p.name)}">
         <div class="card-media">
@@ -216,36 +272,52 @@ function initPublic() {
   /* Project detail overlay */
   const detail = $('#detail');
   let detailId = null;
+  let currentFlat = []; /* flat gallery: [{ url, label, ui, roomLen }] */
 
   function openDetail(id) {
     const p = projects.find(x => x.id === id);
     if (!p) return;
     detailId = id;
     const idx = projects.indexOf(p);
-    const imgs = p.images || [];
+    const rooms = p.images || [];
+
+    /* Build one continuous gallery across all rooms */
+    currentFlat = [];
+    rooms.forEach(r => r.urls.forEach((url, ui) =>
+      currentFlat.push({ url, label: r.label || 'Untitled space', ui, roomLen: r.urls.length })));
 
     $('#dIdx').textContent = `${pad(idx + 1)} / ${pad(projects.length)}`;
     const hero = $('#dHeroImg');
     hero.onerror = () => imgErr(hero);
-    hero.src = p.cover || imgs[0]?.url || FALLBACK_IMG;
+    hero.src = p.cover || currentFlat[0]?.url || FALLBACK_IMG;
     hero.alt = p.name;
-    $('#dChip').style.display = imgs.length ? '' : 'none';
+    $('#dChip').style.display = currentFlat.length ? '' : 'none';
     $('#dName').textContent = p.name;
     $('#dLoc').textContent = p.location || '—';
     $('#dYear').textContent = p.year || '—';
-    $('#dCount').textContent = `${imgs.length} ${imgs.length === 1 ? 'Space' : 'Spaces'}`;
+    $('#dCount').textContent = currentFlat.length
+      ? `${currentFlat.length} ${currentFlat.length === 1 ? 'Photo' : 'Photos'} · ${rooms.length} ${rooms.length === 1 ? 'Room' : 'Rooms'}`
+      : '—';
     $('#dDesc').textContent = p.description || '';
 
-    $('#dRooms').innerHTML = imgs.length
-      ? imgs.map((im, i) => `
-          <button class="room" data-i="${i}">
-            <span class="room-num">${pad(i + 1)}</span>
-            <img class="room-thumb" src="${esc(im.url)}" alt="${esc(im.label)}" loading="lazy" onerror="imgErr(this)">
-            <span class="room-name">${esc(im.label) || 'Untitled space'}</span>
-            <svg class="ic"><use href="#i-arrow"/></svg>
-          </button>`).join('')
+    /* Room rows — each opens its own photo set (first photo of that room) */
+    let k = 0;
+    $('#dRooms').innerHTML = rooms.length
+      ? rooms.map((r, ri) => {
+          const start = k; k += r.urls.length;
+          return `
+            <button class="room" data-i="${start}">
+              <span class="room-num">${pad(ri + 1)}</span>
+              <img class="room-thumb" src="${esc(r.urls[0])}" alt="${esc(r.label)}" loading="lazy" onerror="imgErr(this)">
+              <span class="room-txt">
+                <span class="room-name">${esc(r.label) || 'Untitled space'}</span>
+                <span class="room-sub">${r.urls.length} ${r.urls.length === 1 ? 'Photo' : 'Photos'}</span>
+              </span>
+              <svg class="ic"><use href="#i-arrow"/></svg>
+            </button>`;
+        }).join('')
       : `<p class="rooms-empty">Photography for this project is being prepared.</p>`;
-    $$('#dRooms .room').forEach(r => r.addEventListener('click', () => openLB(imgs, +r.dataset.i)));
+    $$('#dRooms .room').forEach(r => r.addEventListener('click', () => openLB(currentFlat, +r.dataset.i)));
 
     const nx = projects[(idx + 1) % projects.length];
     $('#dNextName').textContent = nx ? nx.name : '';
@@ -258,16 +330,13 @@ function initPublic() {
   function closeDetail() { detail.classList.remove('open'); detailId = null; lockUpdate(); }
 
   $('#dClose').addEventListener('click', closeDetail);
-  $('#dHero').addEventListener('click', () => {
-    const p = projects.find(x => x.id === detailId);
-    if (p && (p.images || []).length) openLB(p.images, 0);
-  });
+  $('#dHero').addEventListener('click', () => { if (currentFlat.length) openLB(currentFlat, 0); });
   $('#dNext').addEventListener('click', () => {
     const i = projects.findIndex(x => x.id === detailId);
     if (i > -1) openDetail(projects[(i + 1) % projects.length].id);
   });
 
-  /* Lightbox */
+  /* Lightbox — browses the whole project; caption always shows the room */
   const lb = { items: [], i: 0 };
   const lbImg = $('#lbImg');
 
@@ -286,7 +355,10 @@ function initPublic() {
     tmp.onerror = () => { lbImg.src = FALLBACK_IMG; lbImg.classList.remove('fade'); };
     tmp.src = it.url || FALLBACK_IMG;
     lbImg.alt = it.label || 'Project image';
-    $('#lbCap').textContent = it.label || '';
+    /* "Living Room · 2 / 3" when the room has several photos, plain name otherwise */
+    $('#lbCap').textContent = it.roomLen > 1
+      ? `${it.label} · ${pad(it.ui + 1)} / ${pad(it.roomLen)}`
+      : (it.label || '');
     $('#lbCount').textContent = `${pad(lb.i + 1)} / ${pad(lb.items.length)}`;
   }
   const lbNext = () => { lb.i = (lb.i + 1) % lb.items.length; showLB(); };
@@ -306,7 +378,6 @@ function initPublic() {
     }
   });
 
-  /* Touch swipe in lightbox */
   let tX = 0;
   $('#lbStage').addEventListener('touchstart', e => { tX = e.touches[0].clientX; }, { passive: true });
   $('#lbStage').addEventListener('touchend', e => {
@@ -314,7 +385,6 @@ function initPublic() {
     if (Math.abs(dx) > 45) (dx < 0 ? lbNext : lbPrev)();
   }, { passive: true });
 
-  /* Copy email */
   $('#copyEmail')?.addEventListener('click', async () => {
     try {
       await navigator.clipboard.writeText('hello@emanelnaggar.com');
@@ -324,7 +394,6 @@ function initPublic() {
     }
   });
 
-  /* Live sync: admin edits in another tab appear here instantly */
   addEventListener('storage', e => {
     if (e.key !== STORE_KEY) return;
     renderGrid();
@@ -371,14 +440,12 @@ function initAdmin() {
   });
   if (sessionStorage.getItem('eman_admin') === '1') enter();
 
-  /* Form refs */
   const form = $('#projForm');
   const fName = $('#fName'), fLoc = $('#fLoc'), fYear = $('#fYear'),
         fDesc = $('#fDesc'), fCover = $('#fCover');
   const rows = $('#imgRows'), coverPrev = $('#coverPrev');
   let editingId = null;
 
-  /* Live preview helper for URL inputs */
   function bindPreview(input, img) {
     const upd = () => {
       const v = input.value.trim();
@@ -392,26 +459,50 @@ function initAdmin() {
   }
   bindPreview(fCover, coverPrev);
 
-  /* Image repeater */
-  function addImgRow(label = '', url = '') {
-    const row = document.createElement('div');
-    row.className = 'img-row';
-    row.innerHTML = `
-      <img class="prev" alt="" style="display:none">
-      <input class="ir-label" type="text" placeholder="Room label — e.g. Living Room" value="${esc(label)}" aria-label="Room label">
-      <input class="ir-url" type="text" placeholder="Image URL — https://…" value="${esc(url)}" aria-label="Image URL">
-      <button type="button" class="rm" aria-label="Remove image"><svg class="ic"><use href="#i-close"/></svg></button>`;
-    bindPreview($('.ir-url', row), $('.prev', row));
-    $('.rm', row).addEventListener('click', () => row.remove());
-    rows.appendChild(row);
+  /* ---- Room groups: each room holds one or more photo URLs ---- */
+  function syncRoomTags() {
+    $$('.img-group', rows).forEach((g, i) => {
+      const t = $('.ig-tag', g);
+      if (t) t.textContent = 'Room ' + pad(i + 1);
+    });
   }
-  $('#btnAddImg').addEventListener('click', () => addImgRow());
+
+  function addRoomGroup(label = '', urls = []) {
+    const g = document.createElement('div');
+    g.className = 'img-group';
+    g.innerHTML = `
+      <div class="ig-head">
+        <span class="ig-tag">Room</span>
+        <button type="button" class="rm-group" aria-label="Remove this room"><svg class="ic"><use href="#i-close"/></svg></button>
+      </div>
+      <input class="ig-label" type="text" placeholder="Room name — e.g. Living Room" value="${esc(label)}" aria-label="Room name">
+      <div class="ig-urls"></div>
+      <button type="button" class="btn btn--sm btn--ghost ig-add"><svg class="ic"><use href="#i-plus"/></svg>Add Photo</button>`;
+    const list = $('.ig-urls', g);
+    const addUrl = (v = '') => {
+      const row = document.createElement('div');
+      row.className = 'img-row';
+      row.innerHTML = `
+        <img class="prev" alt="" style="display:none">
+        <input class="ig-url" type="text" placeholder="Photo URL — https://…" value="${esc(v)}" aria-label="Photo URL">
+        <button type="button" class="rm" aria-label="Remove this photo"><svg class="ic"><use href="#i-close"/></svg></button>`;
+      bindPreview($('.ig-url', row), $('.prev', row));
+      $('.rm', row).addEventListener('click', () => row.remove());
+      list.appendChild(row);
+    };
+    (urls.length ? urls : ['']).forEach(addUrl);
+    $('.ig-add', g).addEventListener('click', () => addUrl());
+    $('.rm-group', g).addEventListener('click', () => { g.remove(); syncRoomTags(); });
+    rows.appendChild(g);
+    syncRoomTags();
+  }
+  $('#btnAddImg').addEventListener('click', () => addRoomGroup());
 
   function resetForm() {
     editingId = null;
     form.reset();
     rows.innerHTML = '';
-    addImgRow();
+    addRoomGroup();
     $('#formTitle').textContent = 'Add Project';
     $('#btnSave').textContent = 'Save Project';
     $('#btnCancelEdit').hidden = true;
@@ -426,8 +517,8 @@ function initAdmin() {
   /* Project list */
   function renderList() {
     const list = Store.all();
-    const nImg = list.reduce((n, p) => n + (p.images || []).length, 0);
-    $('#stat').textContent = `${list.length} project${list.length === 1 ? '' : 's'} · ${nImg} image${nImg === 1 ? '' : 's'}`;
+    const nPhotos = list.reduce((n, p) => n + photoCount(p), 0);
+    $('#stat').textContent = `${list.length} project${list.length === 1 ? '' : 's'} · ${nPhotos} photo${nPhotos === 1 ? '' : 's'}`;
     const box = $('#projList');
 
     if (!list.length) {
@@ -435,13 +526,14 @@ function initAdmin() {
       return;
     }
     box.innerHTML = list.map(p => {
-      const thumb = p.cover || p.images?.[0]?.url || FALLBACK_IMG;
+      const thumb = p.cover || p.images?.[0]?.urls?.[0] || FALLBACK_IMG;
+      const pc = photoCount(p);
       return `
         <div class="list-row">
           <img class="thumb" src="${esc(thumb)}" alt="" onerror="imgErr(this)">
           <div class="list-main">
             <p class="list-name">${esc(p.name)}</p>
-            <p class="list-meta">${esc(p.location) || '—'} · ${(p.images || []).length} image${(p.images || []).length === 1 ? '' : 's'}</p>
+            <p class="list-meta">${esc(p.location) || '—'} · ${(p.images || []).length} room${(p.images || []).length === 1 ? '' : 's'} · ${pc} photo${pc === 1 ? '' : 's'}</p>
           </div>
           <div class="list-actions">
             <button class="ibtn" data-act="edit" data-id="${p.id}" aria-label="Edit project"><svg class="ic"><use href="#i-edit"/></svg></button>
@@ -477,14 +569,15 @@ function initAdmin() {
     fCover.value = p.cover || '';
     fCover.dispatchEvent(new Event('input'));
     rows.innerHTML = '';
-    ((p.images || []).length ? p.images : [{}]).forEach(im => addImgRow(im.label || '', im.url || ''));
+    const imgs = p.images || [];
+    (imgs.length ? imgs : [{ label: '', urls: [''] }])
+      .forEach(im => addRoomGroup(im.label || '', im.urls.length ? im.urls : ['']));
     $('#formTitle').textContent = 'Edit Project';
     $('#btnSave').textContent = 'Update Project';
     $('#btnCancelEdit').hidden = false;
     $('#formPanel').scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 
-  /* Save (add or update) */
   form.addEventListener('submit', e => {
     e.preventDefault();
     const data = {
@@ -493,9 +586,12 @@ function initAdmin() {
       year: fYear.value.trim(),
       description: fDesc.value.trim(),
       cover: fCover.value.trim(),
-      images: $$('.img-row', rows)
-        .map(r => ({ label: $('.ir-label', r).value.trim(), url: $('.ir-url', r).value.trim() }))
-        .filter(im => im.url)
+      images: $$('.img-group', rows)
+        .map(g => ({
+          label: $('.ig-label', g).value.trim(),
+          urls: $$('.ig-url', g).map(i => i.value.trim()).filter(Boolean)
+        }))
+        .filter(r => r.urls.length)
     };
     if (!data.name) {
       fName.closest('.field').classList.add('invalid');
@@ -522,7 +618,6 @@ function initAdmin() {
     toast(msg);
   });
 
-  /* Data tools: export / import / reset */
   $('#btnExport').addEventListener('click', () => {
     const blob = new Blob([JSON.stringify(Store.all(), null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
