@@ -249,6 +249,7 @@ svg.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;str
 .empty .ic{width:30px;height:30px;color:var(--gold);margin:0 auto .8rem}
 .empty em{display:block;font:italic 500 1.2rem var(--serif);color:var(--cream);margin-bottom:.3rem}
 .empty p{font-size:.88rem}
+.empty .btn{margin-top:1.2rem}
 
 /* =========================================================
    ADMIN
@@ -282,33 +283,53 @@ svg.ic{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.5;str
 .field.invalid input{border-color:#b3563e}
 .field.invalid .err{display:block}
 .f-row{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
-.cover-prev{display:none;width:100%;height:150px;object-fit:cover;border:1px solid var(--line);margin-top:.6rem;background:var(--black)}
+.field-hint{font-size:.74rem;color:var(--body);letter-spacing:.05em;margin:-.35rem 0 .85rem}
 
-/* ---- Room groups (admin) ---- */
-.img-group{border:1px solid var(--line);background:rgba(21,57,43,.16);padding:.9rem;margin-bottom:.9rem}
-.ig-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:.6rem}
-.ig-tag{font:italic 500 .95rem var(--serif);color:var(--gold);letter-spacing:.08em}
-.rm-group{width:32px;height:32px;display:grid;place-items:center;border:1px solid var(--line-soft);color:var(--body);transition:color .3s,border-color .3s}
-.rm-group:hover{color:#d68a72;border-color:#d68a72}
-.rm-group .ic{width:14px;height:14px}
-.ig-label{width:100%;background:rgba(236,231,218,.03);border:1px solid var(--line-soft);color:var(--gold-soft);padding:.62rem .75rem;font:500 .95rem var(--sans);letter-spacing:.03em;margin-bottom:.65rem;transition:border-color .3s}
-.ig-label:focus{outline:none;border-color:var(--gold)}
-.ig-label::placeholder{color:rgba(236,231,218,.35)}
-.img-row{display:flex;align-items:center;gap:.6rem;border:1px solid var(--line-soft);background:rgba(236,231,218,.02);padding:.5rem;margin-bottom:.5rem}
-.img-row .prev{width:54px;height:54px;object-fit:cover;border:1px solid var(--line);background:var(--black);flex:none}
-.img-row .ig-url{flex:1;min-width:0;background:transparent;border:1px solid var(--line-soft);color:var(--cream);padding:.55rem .6rem;font:300 .9rem var(--sans);transition:border-color .3s}
-.img-row .ig-url:focus{outline:none;border-color:var(--gold)}
-.img-row .rm{width:32px;height:32px;flex:none;display:grid;place-items:center;border:1px solid var(--line-soft);color:var(--body);transition:color .3s,border-color .3s}
-.img-row .rm:hover{color:#d68a72;border-color:#d68a72}
-.img-row .rm .ic{width:13px;height:13px}
-.ig-add{width:100%}
-.field-hint{font-size:.78rem;color:var(--body);margin:-.15rem 0 .8rem;letter-spacing:.04em}
+/* ---------- Admin: cover picker ---------- */
+.cover-box{border:1px solid var(--line-soft);background:rgba(236,231,218,.02);margin-bottom:.65rem;display:grid;place-items:center;min-height:110px;overflow:hidden}
+.cover-prev{display:block;width:100%;height:200px;object-fit:cover}
+.cover-empty{padding:1.6rem 1rem;color:var(--body);font:italic 400 .95rem var(--serif)}
+.cover-actions{display:flex;gap:.6rem;margin-bottom:.65rem;flex-wrap:wrap}
 
-/* ---- Room rows (public) ---- */
-.room-txt{flex:1;min-width:0}
-.room-sub{display:block;font:500 .62rem var(--sans);letter-spacing:.24em;text-transform:uppercase;color:var(--body);margin-top:.2rem}
-.img-row .rm:hover{color:#d68a72;border-color:#d68a72}
+/* ---------- Admin: rooms & photo grid ---------- */
+.room-edit{border:1px solid var(--line-soft);background:rgba(236,231,218,.015);padding:.85rem .85rem .95rem;margin-bottom:.8rem}
+.room-edit-head{display:flex;align-items:center;gap:.6rem}
+.room-edit-head input{flex:1;min-width:0;background:rgba(236,231,218,.03);border:1px solid var(--line-soft);color:var(--cream);padding:.6rem .7rem;font:300 .9rem var(--sans);transition:border-color .3s}
+.room-edit-head input:focus{outline:none;border-color:var(--gold)}
+.room-tools{display:flex;gap:.35rem;flex:none}
+.room-tools .ibtn{width:32px;height:32px}
+.room-tools .ibtn .ic{width:13px;height:13px}
 
+.photo-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:.6rem;margin-top:.85rem}
+.ph{position:relative;margin:0;aspect-ratio:1/1;border:1px solid var(--line-soft);background:var(--black);overflow:hidden}
+.ph img{width:100%;height:100%;object-fit:cover;display:block}
+.ph-badge{position:absolute;left:6px;top:6px;z-index:2;background:var(--gold);color:var(--black);font:500 .52rem var(--sans);letter-spacing:.16em;text-transform:uppercase;padding:.16rem .4rem}
+.ph-rm{position:absolute;right:5px;top:5px;z-index:2;width:24px;height:24px;display:grid;place-items:center;background:rgba(12,14,12,.78);border:1px solid var(--line-soft);color:var(--cream);transition:color .25s,border-color .25s}
+.ph-rm:hover{color:#d68a72;border-color:#d68a72}
+.ph-rm .ic{width:11px;height:11px}
+.ph-move{position:absolute;bottom:5px;z-index:2;width:24px;height:24px;display:grid;place-items:center;background:rgba(12,14,12,.78);border:1px solid var(--line-soft);color:var(--body);transition:color .25s,border-color .25s}
+.ph-move:hover{color:var(--gold);border-color:var(--gold)}
+.ph-move .ic{width:11px;height:11px}
+.ph-left{left:5px}
+.ph-right{right:5px}
+.ph-add{aspect-ratio:1/1;width:100%;display:grid;place-content:center;justify-items:center;gap:.35rem;border:1px dashed var(--line);background:transparent;color:var(--gold);font:500 .56rem var(--sans);letter-spacing:.18em;text-transform:uppercase;cursor:pointer;transition:border-color .3s,color .3s}
+.ph-add:hover{border-color:var(--gold);color:var(--gold-soft)}
+.ph-add .ic{width:16px;height:16px}
+.room-add-row{display:flex;gap:.6rem;margin-top:.75rem;flex-wrap:wrap}
+
+/* ---------- Admin: publish toggle & save progress ---------- */
+.check{display:flex;align-items:center;gap:.7rem;cursor:pointer;font:300 .92rem var(--sans);letter-spacing:.04em;color:var(--cream);margin-bottom:1.15rem}
+.check input{width:17px;height:17px;accent-color:var(--gold);flex:none}
+.save-progress{margin-top:1.1rem}
+.save-progress .bar{height:4px;background:rgba(236,231,218,.12);overflow:hidden}
+.save-progress .bar span{display:block;height:100%;width:0;background:var(--gold);transition:width .25s var(--ease)}
+.save-progress p{margin-top:.55rem;font-size:.68rem;letter-spacing:.18em;text-transform:uppercase;color:var(--body)}
+.draft-badge{display:inline-block;vertical-align:middle;margin-left:.55rem;font:500 .52rem var(--sans);letter-spacing:.22em;text-transform:uppercase;color:var(--gold);border:1px solid var(--line);padding:.18rem .45rem}
+
+/* ---------- Loading spinner ---------- */
+.spinner{display:inline-block;width:22px;height:22px;border:2px solid var(--line);border-top-color:var(--gold);border-radius:50%;animation:spin 1s linear infinite;margin-bottom:.9rem}
+.load-state{display:flex;flex-direction:column;align-items:center}
+.room-count{font:italic 500 .8rem var(--serif);color:var(--gold-soft)}
 
 .form-actions{display:flex;gap:.8rem;margin-top:1.5rem;flex-wrap:wrap}
 .form-actions [hidden]{display:none}

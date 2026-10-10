@@ -61,7 +61,7 @@
 <main>
   <!-- Hero -->
   <section class="hero" id="top">
-    <div class="wrap hero-inner"
+    <div class="wrap hero-inner"> <!-- fixed: this tag was missing its closing ">" -->
       <div class="hero-copy">
         <p class="eyebrow rise" style="--d:.1s">Interior Designer · Egypt</p>
         <h1 class="hero-name">
@@ -262,6 +262,8 @@ Based in Alexandria and working across Egypt, Eman personally oversees each proj
 
 <div class="toast" id="toast"><svg class="ic"><use href="#i-check"/></svg><span></span></div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="supabase-config.js"></script>
 <script src="script.js"></script>
 </body>
 </html>

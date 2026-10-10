@@ -91,23 +91,28 @@
     </symbol>
   </svg>
 
-  <!-- Passcode gate -->
+  <!-- Login gate (Supabase Authentication) -->
   <div class="gate" id="gate">
     <form class="gate-box" id="gateForm" novalidate>
       <svg class="ic">
         <use href="#i-lock" />
       </svg>
       <h1>Owner Access</h1>
-      <p>Enter the studio passcode to manage the portfolio.</p>
+      <p>Sign in with the studio administrator account to manage the portfolio.</p>
       <div class="field">
-        <label for="gatePass">Passcode</label>
-        <input id="gatePass" type="password" autocomplete="off" placeholder="••••••••">
+        <label for="gateEmail">Email</label>
+        <input id="gateEmail" type="email" autocomplete="email" placeholder="you@yourstudio.com">
       </div>
-      <button class="btn gate-btn" type="submit">Enter Dashboard <svg class="ic">
+      <div class="field">
+        <label for="gatePass">Password</label>
+        <input id="gatePass" type="password" autocomplete="current-password" placeholder="••••••••">
+      </div>
+      <button class="btn gate-btn" type="submit" id="gateBtn">Sign In <svg class="ic">
           <use href="#i-arrow" />
         </svg></button>
-      <p class="gate-err" id="gateErr">Incorrect passcode — please try again.</p>
-
+      <p class="gate-err" id="gateErr">Incorrect email or password — please try again.</p>
+      <p class="gate-hint">The administrator account is created in your <b>Supabase dashboard</b>. Public sign-up is
+        disabled, so this is the only key to the studio.</p>
     </form>
   </div>
 
@@ -136,16 +141,14 @@
           <button class="btn btn--sm" id="btnNew"><svg class="ic">
               <use href="#i-plus" />
             </svg>New Project</button>
-          <button class="btn btn--sm btn--ghost" id="btnExport" title="Download a JSON backup"><svg class="ic">
+          <button class="btn btn--sm btn--ghost" id="btnExport" title="Download a JSON backup (metadata only)"><svg
+              class="ic">
               <use href="#i-down" />
             </svg>Export</button>
-          <button class="btn btn--sm btn--ghost" id="btnImport" title="Import a JSON backup"><svg class="ic">
+          <button class="btn btn--sm btn--ghost" id="btnImport" title="Import a JSON backup (adds/updates projects)">
+            <svg class="ic">
               <use href="#i-up2" />
             </svg>Import</button>
-          <button class="btn btn--sm btn--ghost" id="btnReset" title="Restore the original sample projects"><svg
-              class="ic">
-              <use href="#i-refresh" />
-            </svg>Reset</button>
           <input type="file" id="importFile" accept="application/json,.json" hidden>
         </div>
       </div>
@@ -169,45 +172,74 @@
               <label for="fDesc">Description</label>
               <textarea id="fDesc" placeholder="A short story about the project…"></textarea>
             </div>
+
             <div class="field">
-              <label for="fCover">Cover Image URL</label>
-              <input id="fCover" type="text" placeholder="https://…">
-              <img class="cover-prev" id="coverPrev" alt="Cover preview">
+              <label>Cover Image</label>
+              <div class="cover-box" id="coverBox">
+                <img class="cover-prev" id="coverPrev" alt="Cover preview" hidden>
+                <p class="cover-empty" id="coverEmpty">No cover selected yet.</p>
+              </div>
+              <div class="cover-actions">
+                <button type="button" class="btn btn--sm" id="btnCoverPick"><svg class="ic">
+                    <use href="#i-img" />
+                  </svg>Choose Image</button>
+                <button type="button" class="btn btn--sm btn--ghost" id="btnCoverRemove" hidden><svg class="ic">
+                    <use href="#i-close" />
+                  </svg>Remove</button>
+              </div>
+              <input type="file" id="coverFile" accept="image/jpeg,image/jpg,image/png,image/webp" hidden>
+              <input id="fCoverUrl" type="url" inputmode="url"
+                placeholder="Optional: paste an external image URL instead">
             </div>
-            <<div class="field">
+
+            <div class="field">
               <label>Rooms &amp; Photos</label>
-              <p class="field-hint">Each room can hold multiple photos — add a room name, then paste one or more photo
-                URLs.</p>
-              <div id="imgRows"></div>
-              <button type="button" class="btn btn--sm btn--ghost" id="btnAddImg"><svg class="ic">
+              <p class="field-hint">Add a room, then pick photos from your gallery or computer. Use the arrows on each
+                photo to reorder. Nothing is deleted or uploaded until you press Save.</p>
+              <div id="roomList"></div>
+              <button type="button" class="btn btn--sm btn--ghost" id="btnAddRoom"><svg class="ic">
                   <use href="#i-plus" />
                 </svg>Add Room</button>
-      </div>
-      <div class="form-actions">
-        <button class="btn" type="submit" id="btnSave">Save Project</button>
-        <button class="btn btn--sm btn--ghost" type="button" id="btnCancelEdit" hidden>Cancel Edit</button>
-      </div>
-      </form>
-      </section>
+            </div>
 
-      <!-- List -->
-      <section class="panel">
-        <h2><span>All Projects</span></h2>
-        <div id="projList"></div>
-      </section>
+            <label class="check"><input type="checkbox" id="fPublished" checked><span>Published — visible on the public
+                website</span></label>
+
+            <div class="form-actions">
+              <button class="btn" type="submit" id="btnSave">Save Project</button>
+              <button class="btn btn--sm btn--ghost" type="button" id="btnCancelEdit" hidden>Cancel Edit</button>
+            </div>
+
+            <div class="save-progress" id="saveProgress" hidden>
+              <div class="bar"><span id="saveBarFill"></span></div>
+              <p id="saveStatus">Working…</p>
+            </div>
+          </form>
+        </section>
+
+        <!-- List -->
+        <section class="panel">
+          <h2><span>All Projects</span></h2>
+          <div id="projList"></div>
+        </section>
+      </div>
+
+      <p class="admin-note">Projects and photos are stored in <b>Supabase</b> (database + storage), so every change
+        syncs automatically to every device — no redeploy needed. Use <b>Export</b> occasionally for a metadata backup;
+        the image files themselves live in Supabase Storage. Uncheck <b>Published</b> to keep a project as a draft that
+        only you can see.</p>
+    </main>
   </div>
 
-  <p class="admin-note">Everything is stored locally in this browser via <b>localStorage</b> — no server needed. Saved
-    changes appear on the public site instantly (open or refresh <b>index.html</b>; other open tabs update on their
-    own). Use <b>Export</b> regularly to back up your library.</p>
-  </main>
-  </div>
-
-  <!-- Confirm modal -->
+  <!-- Confirm / prompt modal -->
   <div class="modal" id="modal" role="dialog" aria-modal="true">
     <div class="modal-box">
       <h3 id="mTitle"></h3>
       <p id="mMsg"></p>
+      <div class="field" id="mField" hidden>
+        <label for="mInput">Image URL</label>
+        <input id="mInput" type="url" placeholder="https://…">
+      </div>
       <div class="modal-actions">
         <button class="btn btn--sm btn--ghost" id="mNo" type="button">Cancel</button>
         <button class="btn btn--sm" id="mYes" type="button">Confirm</button>
@@ -219,6 +251,8 @@
       <use href="#i-check" />
     </svg><span></span></div>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+  <script src="supabase-config.js"></script>
   <script src="script.js"></script>
 </body>
 
